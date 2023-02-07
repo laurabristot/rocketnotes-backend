@@ -4,12 +4,15 @@ const migrationsRun = require('./database/sqlite/migrations')
 const AppError = require('./utils/AppError')
 const express = require('express')
 const routes = require('./routes')
+const uploadConfig = require('./configs/upload')
 
 const app = express()
 app.use(express.json())
 
 app.use(routes)
 migrationsRun()
+
+app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
 
 app.use((error, req, res, next) => {
   if (error instanceof AppError) {
@@ -18,7 +21,7 @@ app.use((error, req, res, next) => {
       message: error.message
     })
   }
-  
+
   return res.status(500).json({
     status: 'error',
     message: 'Internal server error'
