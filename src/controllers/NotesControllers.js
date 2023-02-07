@@ -3,7 +3,7 @@ const knex = require('../database/knex')
 class NotesControllers {
   async create(req, res) {
     const { title, description, tags, links } = req.body
-    const { user_id } = req.params
+    const user_id = req.user.id
 
     const note_id = await knex('notes').insert({
       title,
@@ -54,8 +54,8 @@ class NotesControllers {
   }
 
   async index(req, res) {
-    const { user_id, title, tags } = req.query
-
+    const {  title, tags } = req.query
+    const user_id = req.user.id
 
     let notes;
 
