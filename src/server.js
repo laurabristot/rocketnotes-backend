@@ -19,9 +19,7 @@ migrationsRun()
 
 
 const app = express()
-app.use(cors({
-  origin: 'https://rocketnotes-frontend.vercel.app'
-}));
+app.use(cors());
 app.use(express.json())
 
 app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
