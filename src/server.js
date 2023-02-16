@@ -19,7 +19,9 @@ migrationsRun()
 
 
 const app = express()
-app.use(cors({ origin: "https://rocketnotes-bylb.netlify.app/", credentials: true }))
+app.use(cors({
+  origin: 'https://rocketnotes-frontend.vercel.app'
+}));
 app.use(express.json())
 
 app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
