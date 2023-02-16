@@ -10,19 +10,24 @@ const express = require('express')
 const routes = require('./routes')
 const cors = require('cors')
 
+const fs = require('fs');
+const https = require('https');
+
 
 migrationsRun()
 
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200,
-}
+app.all('*', (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://localhost:3000");
+  next();
+})
 
+const credentials = {
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.crt')
+};
 
 const app = express()
-app.use(cors(corsOptions)) // Use this after the variable declaration
-app.use(cors())
+// app.use(cors())
 app.use(express.json())
 
 app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
@@ -44,4 +49,8 @@ app.use((error, req, res, next) => {
 })
 
 const PORT = process.env.SERVER_PORT || 3000
-app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`))
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(PORT, () => {
+    console.log(`Back-end running on port ${PORT}`);
+});
+// app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`))
